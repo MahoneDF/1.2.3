@@ -7,6 +7,7 @@ class my_vector{
     public:
         my_vector(int size);
         my_vector();
+        my_vector(my_vector& a);
         ~my_vector();
 
         int get_lentgh(){return length;}
@@ -15,6 +16,7 @@ class my_vector{
         void print_array();
         void resize(int new_size);
         T operator[](const int i);
+        my_vector operator=(const my_vector& a);
         
 
     private:
@@ -38,10 +40,22 @@ my_vector<T>::my_vector()
     : size(1)
 {
     length = 0;
-    T *array = new T[size];
+    T* array = new T[size];
     array_pointer = array;
-    // array_pointer = new T[size];
 }
+
+template<typename T>
+my_vector<T>::my_vector(my_vector& a) 
+{
+    size = a.size;
+    length = a.length;
+    T* array = new T[size];
+    for(int i = 0; i < a.length; i++){
+        array[i] = a.array_pointer[i];
+    }
+    array_pointer = array;
+}
+
 
 template<typename T>
 bool my_vector<T>::is_full(){
@@ -93,17 +107,29 @@ T my_vector<T>::pop_back(){
 }
 
 template<typename T>
-T my_vector<T>::operator[](int i){
+T my_vector<T>::operator[](const int i){
     return array_pointer[i];
 }
+
+template<typename T>
+my_vector<T> my_vector<T>::operator=(const my_vector& a){
+    return my_vector(a);
+}
+
 
 int main(){
     my_vector<int> v;
     v.push_back(10);
     v.push_back(200);
     v.push_back(1000);
-    v.print_array();
 
+    my_vector<int> s = v;
+    v.push_back(123);
+    
+    v.print_array();
+    s.print_array();
+    s.push_back(12345);
+    s.print_array();
     cout << v[1] << " "  << v.pop_back() << " " << v.pop_back() << endl;
     v.print_array();
 
